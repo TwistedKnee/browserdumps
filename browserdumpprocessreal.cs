@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Metadata;
 using Microsoft.Win32.SafeHandles;
+using System.Text;
 static class myProcessEx
 {  
 
@@ -73,6 +74,30 @@ static class myProcessEx
 
             MiniDumpWriteDump( hProcess , (uint)p.Id, file.SafeFileHandle.DangerousGetHandle(), MiniDumpWithFullMemory, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
             file.Close();
+
+            byte[] buffer = File.ReadAllBytes(dumpFileName);
+            StringBuilder sb = new StringBuilder();
+
+            foreach (byte b in buffer)
+                {
+                    if (b >= 32 && b <= 126)
+                    {        
+                    sb.Append((char)b);
+                    } 
+                    else
+                    {
+                        if (sb.Length >= 6)
+                        {
+                            string test;
+                            test = sb.ToString();
+                            if (test.Contains("comhttps"))
+                            {
+                                Console.WriteLine(test);   
+                            }
+                        }
+                        sb.Clear();
+                    }
+                }
             string exename = Path.GetFileName(dumpFileName);
             Console.WriteLine("Memory dumps saved to " + exename);
 
