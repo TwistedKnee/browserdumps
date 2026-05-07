@@ -90,9 +90,15 @@ static class myProcessEx
                         {
                             string test;
                             test = sb.ToString();
-                            if (test.Contains("comhttps"))
+                            if (test.Contains("comhttps ") || test.Contains("nethttps ") || test.Contains("orghttps "))
                             {
-                                Console.WriteLine(test);   
+                                Console.WriteLine(test);
+                                string interestingStringsDump = @"C:\\Windows\Temp\InterestingStrings.txt";   
+                                using (FileStream file2 = new FileStream(interestingStringsDump, FileMode.Append))
+                                {
+                                    byte[] data = System.Text.Encoding.UTF8.GetBytes(test + Environment.NewLine);
+                                    file2.Write(data, 0, data.Length);
+                                }
                             }
                         }
                         sb.Clear();
